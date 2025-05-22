@@ -1,0 +1,33 @@
+hostname PE2
+!
+interface f1/0
+ ip add 172.16.25.2 255.255.255.0
+ speed 100
+ duplex full
+ no shut
+!
+int loopback0
+ ip add 2.2.2.2 255.255.255.255
+
+router ospf 1
+ router-id 2.2.2.2
+ passive-interface default
+ no passive-interface f1/0
+ network 172.16.25.0 0.0.0.255 area 0
+ network 2.2.2.2 0.0.0.0 area 0
+!
+! enable mpls
+
+int f0/0
+ mpls ip
+
+! configure mp-bgp
+
+router bgp 65501
+ no bgp default ipv4-unicast
+ neighbor 5.5.5.5 remote 65501
+ neighbor 5.5.5.5 update-source lo0
+
+ !
+ address-family vpnv4 unicast
+  neighbor 5.5.5.5 activate
