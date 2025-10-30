@@ -1,0 +1,26 @@
+! CSR1 configurations
+!
+hostname CSR-1
+!
+interface g1
+ desc Primary WAN Connection
+ ip add 172.16.100.2 255.255.255.248
+ no shut
+!
+route-map ISP_PRIMARY_IN permit 10
+ set local-pref 150
+!
+route-map ISP_PRIMAR_OUT permit 10
+!
+router bgp 65534
+ neighbor 172.16.100.1 remote 65501
+ neighbor 172.16.100.1 route-map ISP_PRIMARY_IN in
+ neighbor 172.16.100.1 route-map ISP_PRIMARY_OUT out
+!
+ip domain name fullstackautomation.com
+username script priv 15 secret cisco123
+crypto key generate rsa
+2048
+line vty 0 4
+ login local
+ transport input ssh

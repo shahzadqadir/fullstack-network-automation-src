@@ -1,0 +1,78 @@
+!!! P Router !!!
+
+hostname P
+!
+interface f0/0
+ ip add 172.16.15.5 255.255.255.0
+ duplex full
+ no shut
+!
+interface f1/0
+ ip add 172.16.25.5 255.255.255.0
+ speed 100
+ duplex full
+ no shut
+!
+interface f1/1
+ ip add 172.16.35.5 255.255.255.0
+ speed 100
+ duplex full
+ no shut
+!
+interface f2/0
+ ip add 172.16.45.5 255.255.255.0
+ speed 100
+ duplex full
+ no shut
+!
+interface lo0
+ ip add 5.5.5.5 255.255.255.255
+!
+router ospf 1
+ router-id 5.5.5.5
+ passive-interface default
+ no passive-interface f0/0
+ no passive-interface f1/0
+ no passive-interface f1/1
+ no passive-interface f2/0
+ network 172.16.15.0 0.0.0.255 area 0
+ network 172.16.25.0 0.0.0.255 area 0
+ network 172.16.35.0 0.0.0.255 area 0
+ network 172.16.45.0 0.0.0.255 area 0
+ network 5.5.5.5 0.0.0.0 area 0
+
+! -------------------
+
+! enable mpls
+
+int f0/0
+ mpls ip
+int f1/0
+ mpls ip
+int f1/1
+ mpls ip
+int f2/0
+ mpls ip
+
+! configure mp-bgp
+
+router bgp 65501
+ no bgp default ipv4-unicast
+ neighbor 1.1.1.1 remote 65501
+ neighbor 1.1.1.1 update-source lo0
+ neighbor 2.2.2.2 remote 65501
+ neighbor 2.2.2.2 update-source lo0
+ neighbor 3.3.3.3 remote 65501
+ neighbor 3.3.3.3 update-source lo0
+ neighbor 4.4.4.4 remote 65501
+ neighbor 4.4.4.4 update-source lo0
+ !
+ address-family vpnv4 unicast
+  neighbor 1.1.1.1 activate
+  neighbor 2.2.2.2 activate
+  neighbor 3.3.3.3 activate
+  neighbor 4.4.4.4 activate
+  neighbor 1.1.1.1 route-reflector-client
+  neighbor 2.2.2.2 route-reflector-client
+  neighbor 3.3.3.3 route-reflector-client
+  neighbor 4.4.4.4 route-reflector-client

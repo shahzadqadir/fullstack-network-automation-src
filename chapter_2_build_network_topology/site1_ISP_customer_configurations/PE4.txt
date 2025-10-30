@@ -1,0 +1,30 @@
+PE4#sh run vrf ABC_LTD
+Building configuration...
+
+Current configuration : 503 bytes
+vrf definition ABC_LTD
+ rd 4.4.4.4:100
+ !
+ address-family ipv4
+ route-target export 100:100
+ route-target import 100:100
+ exit-address-family
+!
+!
+interface FastEthernet0/0
+ vrf forwarding ABC_LTD
+ ip address 172.16.101.1 255.255.255.248
+ duplex half
+ mpls ip
+!
+router bgp 65501
+ !
+ address-family ipv4 vrf ABC_LTD
+  no synchronization
+  redistribute connected
+  neighbor 172.16.101.2 remote-as 65535
+  neighbor 172.16.101.2 activate
+  neighbor 172.16.101.2 default-originate
+ exit-address-family
+!
+end

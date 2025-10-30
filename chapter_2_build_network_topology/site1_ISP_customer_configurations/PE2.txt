@@ -1,0 +1,56 @@
+PE2#sh run vrf
+Building configuration...
+
+Current configuration : 990 bytes
+vrf definition ABC_LTD
+ rd 2.2.2.2:100
+ !
+ address-family ipv4
+ route-target export 100:100
+ route-target import 100:100
+ exit-address-family
+!
+!
+interface FastEthernet1/1
+ vrf forwarding ABC_LTD
+ ip address 172.16.100.1 255.255.255.248
+ speed auto
+ duplex auto
+!
+interface FastEthernet2/0
+ vrf forwarding ABC_LTD
+ ip address 172.16.100.9 255.255.255.248
+ speed 100
+ duplex full
+!
+route-map ABC_LTD_BACKUP_OUT permit 10
+!
+route-map ABC_LTD_PRIMARY_IN permit 10
+ set local-preference 250
+!
+route-map ABC_LTD_PRIMARY_OUT permit 10
+ set as-path prepend 65501 65501 65501
+!
+route-map ABC_LTD_BACKUP_IN permit 10
+ set local-preference 200
+!
+router bgp 65501
+ !
+ address-family ipv4 vrf ABC_LTD
+  no synchronization
+  redistribute connected
+  neighbor 172.16.100.2 remote-as 65534
+  neighbor 172.16.100.2 description ABC_LTD Primary
+  neighbor 172.16.100.2 activate
+  neighbor 172.16.100.2 route-map ABC_LTD_PRIMARY_IN in
+  neighbor 172.16.100.2 route-map ABC_LTD_PRIMARY_OUT out
+  neighbor 172.16.100.10 remote-as 65534
+  neighbor 172.16.100.10 description ABC_LTD Backup
+  neighbor 172.16.100.10 activate
+  neighbor 172.16.100.10 route-map ABC_LTD_BACKUP_IN in
+  neighbor 172.16.100.10 route-map ABC_LTD_BACKUP_OUT out
+ exit-address-family
+!
+!
+end
+!

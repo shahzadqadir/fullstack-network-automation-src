@@ -1,0 +1,2 @@
+sudo tunctl     # Creates tap0 interface
+sudo ifconfig tap0 10.10.99.100/24
