@@ -20,6 +20,32 @@ class Device:
             verify=False
             )
         return response.json()
+    
+    def add_loopback_interface(self, ipaddr: str, mask: str, name: str, descr: str):
+            payload = {
+                "Cisco-IOS-XE-native:Loopback": [
+                    {
+                        "name": int(name),
+                        "description": f"{descr}",
+                        "ip": {
+                            "address": {
+                                "primary": {
+                                    "address": ipaddr,
+                                    "mask": mask
+                                    }
+                                }
+                            }
+                        }
+                    ]
+                }
+            response = requests.post(
+                url=f"{self.base_url}/Cisco-IOS-XE-native:native/interface",
+                json=payload,
+                headers=self.headers,
+                auth=HTTPBasicAuth(username=self.username, password=self.password),
+                verify=False
+                )
+            return response
 
 
 def main():
