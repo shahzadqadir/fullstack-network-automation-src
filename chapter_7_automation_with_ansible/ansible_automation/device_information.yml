@@ -1,0 +1,25 @@
+# ~/automation/ansible_automation/device_information.yml
+---
+
+- hosts: site1_network
+  gather_facts: false
+  connection: network_cli 
+  
+  vars:
+    ansible_user: script
+    ansible_password: cisco123
+    ansible_network_os: ios
+
+  tasks:
+
+    - name: get devices information
+      cisco.ios.ios_command:
+        commands:
+          - show ip int brief
+          - show ip route
+          - show version | include Version
+          - show version | include time
+      register: output
+
+    - name: print output
+      debug: var=output.stdout_lines

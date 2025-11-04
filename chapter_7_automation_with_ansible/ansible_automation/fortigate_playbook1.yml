@@ -1,0 +1,56 @@
+# ~/automation/ansible_automation/fortigate_playbook1.yml
+
+---
+
+# Play 1 - For Site 2 Fortigate firewall
+
+- name: Pull info using FortiOS API
+  hosts: fortigate_01
+  connection: httpapi
+  gather_facts: false
+  collections:
+    - fortinet.fortios
+
+  vars:
+    ansible_network_os: fortinet.fortios.fortios
+    ansible_httpapi_use_ssl: false
+    ansible_httpapi_validate_certs: false
+    ansible_httpapi_port: 80  # Fortigate's Eval VM Don't allow SSL
+    # ansible_user: script
+    # ansible_password: cisco123
+
+  tasks:
+
+    - name: Get System Interfaces
+      fortinet.fortios.fortios_monitor_fact:
+          vdom: root
+          selectors:
+              - selector: "system_interface"
+      register: interface_facts
+
+    - name: Print output
+      debug:
+        var: interface_facts.meta
+
+# Play 2 - For Site 2 Cisco devices			*** NEW ****
+
+- name: Site 2 Cisco Switches
+  hosts: site2_switches
+  connection: network_cli
+  gather_facts: false
+  collections:
+    - cisco.ios
+
+  tasks:
+
+    - name: get devices information
+      cisco.ios.ios_command:
+        commands:
+          - show ip int brief
+          - show ip route
+          - show version | include Version
+          - show version | include time
+      register: output
+
+    - name: print output
+      debug: var=output.stdout_lines

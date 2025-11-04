@@ -1,0 +1,5 @@
+# ~/automation/ansible_automation/group_vars/site2_switches.yml
+
+ansible_user: script
+ansible_password: cisco123
+ansible_network_os: ios
