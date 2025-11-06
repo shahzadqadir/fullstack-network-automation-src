@@ -1,0 +1,36 @@
+# ~/automation/ansible_automation/ch8_site2_configs.yml
+---
+
+- name: Play 1 - Add new addresses to an existing address group
+  hosts: firewalls
+  connection: httpapi
+  gather_facts: false
+
+  tasks:
+
+    - name: Create New Address
+      fortios_firewall_address:
+        vdom: "root"
+        state: "present"
+        firewall_address:
+          name: "{{ item.name }}"
+          type: "ipmask"
+          subnet: "{{ item.subnet }}"
+      loop:
+        - {name: "172.16.15.0/24", subnet: "172.16.15.0/24"}
+        - {name: "172.16.16.0/24", subnet: "172.16.16.0/24"}
+        - {name: "172.16.17.0/24", subnet: "172.16.17.0/24"}
+
+    - name: Add new Addresses to Address Group
+      fortios_firewall_addrgrp:
+        vdom: "root"
+        state: "present"
+        firewall_addrgrp:
+          name: "SITE1_ADDRESSES"
+          member:
+            - name: "172.16.11.0/24"
+            - name: "172.16.12.0/24"
+            - name: "172.16.13.0/24"
+            - name: "172.16.15.0/24"
+            - name: "172.16.16.0/24"
+            - name: "172.16.17.0/24"

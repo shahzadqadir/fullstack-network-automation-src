@@ -1,0 +1,14 @@
+# ~/automation/ansible_automation/csr_configurations.yml
+
+---
+
+- name: Interface Configurations for CSR Routers
+  hosts: edge_routers
+  gather_facts: false
+  connection: network_cli
+
+  tasks:
+
+    - name: Configure interfaces
+      cisco.ios.ios_config:
+        src: csrs/interface_configurations.j2

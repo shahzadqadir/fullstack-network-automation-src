@@ -1,0 +1,17 @@
+# ~/automation/ansible_automation/templates/csrs/route_maps.j2
+
+end
+{% for routemap in routemaps %}
+    route-map {{ routemap.name }} {{ routemap.action }} {{ routemap.seq }}
+        match ip address {{ routemap.acl }}
+        {% if routemap.set %}
+            {% if routemap.set.local_pref %}
+                set local-preference {{ routemap.set.local_pref }}
+            {% endif %}
+            {% if routemap.set.prepend %}
+                set as-path prepend {{ routemap.set.prepend }}
+            {% endif %}
+        {% endif %}
+    !
+    exit
+{% endfor %}

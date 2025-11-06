@@ -1,0 +1,20 @@
+vlans:
+
+  - name: Prod
+    number: 11
+  - name: Dev
+    number: 12
+  - name: Dev-Test
+    number: 13
+  - name: Pre-Prod
+    number: 15
+  - name: Data-16
+    number: 16
+  - name: Data-17
+    number: 17
+  - name: Data-18
+    number: 18
+  - name: Internet
+    number: 19
+  - name: Site2Site
+    number: 20

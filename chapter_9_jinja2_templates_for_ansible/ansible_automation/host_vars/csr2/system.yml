@@ -1,0 +1,3 @@
+# ~/automation/ansible_automation/host_vars/csr2/system.yml
+
+hostname: CSR2

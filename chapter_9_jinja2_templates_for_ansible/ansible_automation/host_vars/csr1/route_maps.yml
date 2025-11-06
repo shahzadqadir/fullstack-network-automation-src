@@ -1,0 +1,16 @@
+# ~/automation/ansible_automation/host_vars/csr1/route_maps.yml
+
+---
+routemaps:
+  - name: PRIMARY_PERMIT_IN
+    seq: 10
+    acl: allow-all
+    action: permit
+    set:
+      local_pref: 150
+      prepend: ""
+  - name: PRIMARY_PERMIT_OUT
+    seq: 10
+    acl: allow-all
+    action: permit
+    set: ""

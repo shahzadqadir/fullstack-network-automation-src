@@ -1,0 +1,6 @@
+ansible_user: script
+ansible_password: cisco123
+ansible_network_os: fortinet.fortios.fortios
+ansible_httpapi_use_ssl: false
+ansible_httpapi_validate_certs: false
+ansible_httpapi_port: 80  # Fortigate's Eval VM Don't allow SSL

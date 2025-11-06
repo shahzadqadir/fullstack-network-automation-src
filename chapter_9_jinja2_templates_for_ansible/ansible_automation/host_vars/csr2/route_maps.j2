@@ -1,0 +1,18 @@
+# ~/automation/ansible_automation/host_vars/csr2/route_maps.j2
+
+---
+routemaps:
+  - name: PRIMARY_PERMIT_IN
+    seq: 10
+    acl: allow-all
+    action: permit
+    set:
+      local_pref: 250
+      prepend: ""
+  - name: PRIMARY_PERMIT_OUT
+    seq: 10
+    acl: allow-all
+    action: permit
+    set:
+      local_pref: ""
+      prepend: "65534 65534 65534"

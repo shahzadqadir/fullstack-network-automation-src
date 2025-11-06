@@ -1,0 +1,26 @@
+hostname {{ hostname }}
+
+{% for interface in interfaces %}
+    interface {{ interface.name }}
+        description {{ interface.description }}
+    {% if interface.state == 'shut' %}        
+        shutdown
+    {% else %}
+        {% if interface.ip %}
+            ip address {{ interface.ip }} {{ interface.mask }}
+        {% endif %}
+        {% if interface.type == 'dot1q' %}
+            {% for intf in interface.subinterfaces %}
+                interface {{interface.name}}.{{ intf.number }}
+                description {{ intf.description }}
+                encapsulation dot1q {{ intf.number }}
+                ip address {{ intf.ip }} {{ intf.mask }}
+                standby {{ intf.standby.group }} ip {{ intf.standby.ip }}
+                standby {{ intf.standby.group }} priority {{ intf.standby.priority }}
+                {% if intf.standby.preempt %}
+                    standby {{ intf.standby.group }} preempt
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+    {% endif %}
+{% endfor %}

@@ -1,0 +1,31 @@
+# ~/automation/ansible_automation/hosts
+
+[edge_routers]
+csr1    ansible_host=10.10.99.11
+csr2    ansible_host=10.10.99.12
+
+[site1_switches]
+sw1 ansible_host=10.10.99.13
+sw2 ansible_host=10.10.99.14
+
+[site1_network:children]
+edge_routers
+site1_switches
+
+[firewalls]
+fortigate_01 ansible_host=10.10.99.1
+
+[site2_switches]
+sw_inside ansible_host=10.10.99.2
+sw_dmz ansible_host=10.10.99.3
+
+[site2_network:children]
+firewalls
+site2_switches
+
+[networK:children]
+site1_network
+site2_network
+
+[firewalls]
+fortigate_01 ansible_host=10.10.99.1

@@ -1,0 +1,74 @@
+# ~/automation/ansible_automation/ch8_vlan_configs.yml
+
+---
+# Play 1: Create VLANs on Site 1 Switches
+
+- name: Site 1 Layer Vlan Configs
+  hosts: site1_switches
+  gather_facts: false
+  connection: network_cli
+
+  tasks:
+    - name: Configure Vlans 15, 16, and 17
+      cisco.ios.ios_config:
+        commands:
+          - vlan {{ item }}
+          - name VLAN-{{item}}
+      loop:
+        - 15
+        - 16
+        - 17
+
+    - name: Trunk Vlans on links to CSR1, and CSR2
+      cisco.ios.ios_config:
+        commands:
+          - switchport trunk allowed vlan add 15
+          - switchport trunk allowed vlan add 16
+          - switchport trunk allowed vlan add 17
+        parents: "{{ item }}"
+      loop:
+        - interface e0/0
+        - interface e0/1
+
+# Play 2: Create SVIs on CSRs
+
+- name: Create SVIs on CSRs
+  hosts: edge_routers
+  gather_facts: false
+  connection: network_cli
+
+  tasks:
+    - name: Configure SVI
+      cisco.ios.ios_config:
+        lines:
+          - encapsulation dot1q {{item}}
+          - ip address 172.16.{{item}}.{{inventory_hostname[-1]}} 255.255.255.0
+          - standby 1 priority {{ 140-(inventory_hostname[-1])|int *10 }}
+          - standby 1 ip 172.16.{{item}}.254
+          - standby 1 preempt
+          - no shut
+        parents: interface GigabitEthernet2.{{item}}
+      loop:
+        - 15
+        - 16
+        - 17
+
+# Play 3: Advertise subnets to BGP
+- name: Advertise BGP on CSRs
+  hosts: edge_routers
+  gather_facts: false
+  connection: network_cli
+
+  tasks:
+    - name: Advertise subnets to BGP
+      cisco.ios.ios_bgp_global:
+        config:
+          as_number: 65534
+          networks:
+            - address: 172.16.15.0
+              netmask: 255.255.255.0
+            - address: 172.16.16.0
+              netmask: 255.255.255.0
+            - address: 172.16.17.0
+              netmask: 255.255.255.0
+        state: merged

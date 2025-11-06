@@ -1,0 +1,50 @@
+---
+
+- name: Test connectivity from Site 2 to Site 1
+  hosts: sw_inside
+  connection: network_cli
+  gather_facts: false
+
+  tasks:
+
+    - name: "Task 1 - Configure SW_Inside to Firewall interface with IP Details"
+      cisco.ios.ios_config:
+        lines:
+          - no switchport
+          - ip address 172.16.21.5 255.255.255.0
+        parents:
+          - interface Ethernet0/0
+
+    - name: " Task 2 - Test Connectivity to Fortigate Firewall"
+      cisco.ios.ios_command:
+        commands:
+          - ping 172.16.21.1
+      register: output
+
+    - name: "Task 3 - Print firewall connectivity test results"
+      debug: var=output.stdout_lines
+
+    - name: "Task 4 - Configure Static Route Pointing to Fortigate"
+      cisco.ios.ios_config:
+        lines:
+          - ip route 0.0.0.0 0.0.0.0 172.16.21.1
+
+    - name: "Task 5 - Test Connectivity to Fortigate Firewall"
+      cisco.ios.ios_command:
+        commands:
+          - show ip route 0.0.0.0
+      register: output
+
+    - name: "Task 6 - Print configured default route"
+      debug: var=output.stdout_lines
+
+    - name: "Task 7 - Test connectivity to remote subnets"
+      cisco.ios.ios_command:
+        commands:
+          - ping 172.16.15.1
+          - ping 172.16.16.1
+          - ping 172.16.17.1
+      register: output
+
+    - name: "Task 8 - Print test results for site 2 to site 1 connectivity"
+      debug: var=output.stdout_lines

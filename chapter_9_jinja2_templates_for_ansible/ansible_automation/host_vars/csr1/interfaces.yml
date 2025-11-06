@@ -1,0 +1,111 @@
+# ~/automation/ansible_automation/host_vars/csr1/interfaces.yml
+
+interfaces:
+  - name: GigabitEthernet1
+    description: "Primary WAN Connection"
+    ip: 172.16.100.2
+    mask: 255.255.255.248
+    state: up
+    type: physical
+    
+  - name: GigabitEthernet2
+    description: "LAN Port"
+    ip: ""
+    type: dot1q
+    state: up
+    subinterfaces:
+      - number: 11
+        description: "Prod Vlan"
+        ip: 172.16.11.1
+        mask: 255.255.255.0
+        standby:
+          ip: 172.16.11.254
+          priority: 130
+          preempt: true
+          group: 1
+      - number: 12
+        description: "Dev Vlan"
+        ip: 172.16.12.1
+        mask: 255.255.255.0
+        standby:
+          ip: 172.16.12.254
+          priority: 130
+          preempt: true
+          group: 1
+      - number: 13
+        description: "Dev-Test Vlan"
+        ip: 172.16.13.1
+        mask: 255.255.255.0
+        standby:
+          ip: 172.16.13.254
+          priority: 130
+          preempt: true
+          group: 1
+      - number: 15
+        description: "Pre-Prod Vlan"
+        ip: 172.16.15.1
+        mask: 255.255.255.0
+        standby:
+          ip: 172.16.15.254
+          priority: 130
+          preempt: true
+          group: 1
+      - number: 16
+        description: "Data-16 Vlan"
+        ip: 172.16.16.1
+        mask: 255.255.255.0
+        standby:
+          ip: 172.16.16.254
+          priority: 130
+          preempt: true
+          group: 1
+      - number: 17
+        description: "Data-17 Vlan"
+        ip: 172.16.17.1
+        mask: 255.255.255.0
+        standby:
+          ip: 172.16.17.254
+          priority: 130
+          preempt: true
+          group: 1
+      - number: 18
+        description: "Data-18 Vlan"
+        ip: 172.16.18.1
+        mask: 255.255.255.0
+        standby:
+          ip: 172.16.18.254
+          priority: 130
+          preempt: true
+          group: 1
+      - number: 19
+        description: "Internet Vlan"
+        ip: 172.16.19.1
+        mask: 255.255.255.0
+        standby:
+          ip: 172.16.19.254
+          priority: 130
+          preempt: true
+          group: 1
+      - number: 20
+        description: "Site2Site Vlan"
+        ip: 172.16.20.1
+        mask: 255.255.255.0
+        standby:
+          ip: 172.16.20.254
+          priority: 130
+          preempt: true
+          group: 1
+
+  - name: GigabitEthernet3
+    description: "unused"
+    ip: ""
+    mask: ""
+    state: shut
+    type: physical
+
+  - name: GigabitEthernet4
+    description: "Management Connection"
+    ip: "10.10.99.11"
+    mask: "255.255.255.0"
+    state: up
+    type: physical

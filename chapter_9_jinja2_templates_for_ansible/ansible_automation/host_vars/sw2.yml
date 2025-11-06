@@ -1,0 +1,8 @@
+# ~/automation/ansible_automation/host_vars/sw2.yml
+---
+
+trunks:
+  - port: E0/0
+    allowed_vlans: 11-13,15-20
+  - port: E0/1
+    allowed_vlans: 11-13,15-20

@@ -1,0 +1,28 @@
+# ~/automation/ansible_automation/host_vars/csr2/routing.yml
+  
+bgp:
+  local_as: 65534
+  neighbors:
+    - ip: 172.16.100.9
+      remote_as: 65501
+      route_map_in: BACKUP_PERMIT_IN
+      route_map_out: BACKUP_PERMIT_OUT
+  networks:
+    - subnet: 172.16.11.0
+      mask: 255.255.255.0
+    - subnet: 172.16.12.0
+      mask: 255.255.255.0
+    - subnet: 172.16.13.0
+      mask: 255.255.255.0
+    - subnet: 172.16.15.0
+      mask: 255.255.255.0
+    - subnet: 172.16.16.0
+      mask: 255.255.255.0
+    - subnet: 172.16.17.0
+      mask: 255.255.255.0
+    - subnet: 172.16.18.0
+      mask: 255.255.255.0
+    - subnet: 172.16.19.0
+      mask: 255.255.255.0
+    - subnet: 172.16.20.0
+      mask: 255.255.255.0

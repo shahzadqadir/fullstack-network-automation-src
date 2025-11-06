@@ -1,0 +1,5 @@
+end
+{% for trunk in trunks %}
+    interface {{ trunk.port }}
+        switchport trunk allowed vlan add {{ trunk.allowed_vlans }}
+{% endfor %}

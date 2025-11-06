@@ -1,0 +1,23 @@
+# ~/automation/ansible_automation/templates/csrs/access_list_configuration.j2
+
+end
+{% for acl in accesslists.standard %}
+  ip access-list standard {{ acl.name }}
+  {% for line in acl.lines %}
+  {{ line.action }} {{ line.src_network }} {{ line.src_mask }}
+  {% endfor %}
+  exit
+{% endfor %}
+
+end
+{% for acl in accesslists.extended %} 
+  ip access-list extended {{ acl.name }}
+  {% for line in acl.lines %}    
+  {% if line.ports | length > 1 %}
+    {{ line.action  }} {{ line.protocol }} {{ line.src_network }} {{ line.src_mask }} {{ line.dst_network }} {{ line.dst_mask}} range {{ line.ports | join(' ')}}
+  {% else %}
+    {{ line.action  }} {{ line.protocol }} {{ line.src_network }} {{ line.src_mask }} {{ line.dst_network }} {{ line.dst_mask}} eq {{ line.ports[0] }}
+  {% endif %}
+  {% endfor %}
+  exit
+{% endfor %}

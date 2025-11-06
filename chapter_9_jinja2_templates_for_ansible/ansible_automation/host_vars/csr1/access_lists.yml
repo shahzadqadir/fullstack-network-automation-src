@@ -1,0 +1,42 @@
+---
+
+accesslists:
+  standard:
+    - name: "allow-all"
+      lines:
+      - src_network: 0.0.0.0
+        src_mask: 255.255.255.255
+        action: "permit"
+  extended:
+    - name: "test-extended-1"
+      type: extended
+      lines:
+        - src_network: 172.16.10.0
+          src_mask: 0.0.0.255
+          dst_network: 172.16.20.0
+          dst_mask: 0.0.0.255
+          protocol: "udp"
+          ports:
+            - 53
+          action: "permit"
+    - name: "test-extended-2"
+      type: extended
+      lines:
+        - src_network: 172.16.10.0
+          src_mask: 0.0.0.255
+          dst_network: 172.16.20.0
+          dst_mask: 0.0.0.255
+          protocol: "tcp"
+          ports:
+            - 22
+            - 443
+          action: "permit"
+        - src_network: 172.16.20.0
+          src_mask: 0.0.0.255
+          dst_network: 172.16.20.0
+          dst_mask: 0.0.0.255
+          protocol: "tcp"
+          ports:
+            - 7999
+            - 443
+          action: "permit"
