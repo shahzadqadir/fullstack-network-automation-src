@@ -9,19 +9,16 @@ interface f0/0
 !
 interface f1/0
  ip add 172.16.25.5 255.255.255.0
- speed 100
  duplex full
  no shut
 !
 interface f1/1
  ip add 172.16.35.5 255.255.255.0
- speed 100
  duplex full
  no shut
 !
 interface f2/0
  ip add 172.16.45.5 255.255.255.0
- speed 100
  duplex full
  no shut
 !

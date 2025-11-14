@@ -10,7 +10,7 @@ interface g1
 route-map ISP_PRIMARY_IN permit 10
  set local-pref 250
 !
-route-map ISP_PRIMAR_OUT permit 10
+route-map ISP_PRIMARY_OUT permit 10
  set as-path prepend 65534 65534 65534
 !
 router bgp 65534

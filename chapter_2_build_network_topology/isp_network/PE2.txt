@@ -2,7 +2,6 @@ hostname PE2
 !
 interface f1/0
  ip add 172.16.25.2 255.255.255.0
- speed 100
  duplex full
  no shut
 !

@@ -14,14 +14,17 @@ vrf definition ABC_LTD
 interface FastEthernet1/1
  vrf forwarding ABC_LTD
  ip address 172.16.100.1 255.255.255.248
- speed auto
- duplex auto
+ duplex full
+ no shut
 !
 interface FastEthernet2/0
  vrf forwarding ABC_LTD
  ip address 172.16.100.9 255.255.255.248
- speed 100
  duplex full
+ no shut
+!
+route-map ABC_LTD_BACKUP_IN permit 10
+ set local-preference 200
 !
 route-map ABC_LTD_BACKUP_OUT permit 10
 !
@@ -30,9 +33,6 @@ route-map ABC_LTD_PRIMARY_IN permit 10
 !
 route-map ABC_LTD_PRIMARY_OUT permit 10
  set as-path prepend 65501 65501 65501
-!
-route-map ABC_LTD_BACKUP_IN permit 10
- set local-preference 200
 !
 router bgp 65501
  !

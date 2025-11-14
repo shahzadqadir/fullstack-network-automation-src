@@ -1,0 +1,73 @@
+CSR-1
+
+interface GigabitEthernet4
+ ip address 10.10.99.11 255.255.255.0
+ no shut
+end
+
+CSR2#sh run int g4
+Building configuration...
+
+Current configuration : 119 bytes
+!
+interface GigabitEthernet4
+ ip address 10.10.99.12 255.255.255.0
+ no shut
+end
+
+
+SW1(config-if)#do sh run int e0/2
+Building configuration...
+
+Current configuration : 94 bytes
+!
+interface Ethernet0/2
+ no switchport
+ ip address 10.10.99.13 255.255.255.0
+ duplex full
+ no shut
+end
+
+SW2(config-if)#do sh run int e0/2
+Building configuration...
+
+Current configuration : 94 bytes
+!
+interface Ethernet0/2
+ no switchport
+ ip address 10.10.99.14 255.255.255.0
+ duplex full
+ no shut
+end
+
+Fortigate
+
+config system interface
+    edit "port4"
+        set vdom "root"
+        set ip 10.10.99.1 255.255.255.0
+        set allowaccess ping https ssh http
+
+SW-inside#sh run int e0/1
+Building configuration...
+
+Current configuration : 94 bytes
+!
+interface Ethernet0/1
+ no switchport
+ ip address 10.10.99.2 255.255.255.0
+ duplex full
+ no shut
+end
+
+SW-dmz#sh run int e0/1
+Building configuration...
+
+Current configuration : 94 bytes
+!
+interface Ethernet0/1
+ no switchport
+ ip address 10.10.99.3 255.255.255.0
+ duplex full
+ no shut
+end

@@ -1,0 +1,75 @@
+## Check Routing on both sites
+
+# Routes on CSR-1
+CSR1#sh ip route | be Gateway
+Gateway of last resort is not set
+
+      172.16.0.0/16 is variably subnetted, 4 subnets, 2 masks
+C        172.16.100.0/29 is directly connected, GigabitEthernet1
+L        172.16.100.2/32 is directly connected, GigabitEthernet1
+B        172.16.100.8/29 [20/0] via 172.16.100.1, 00:03:12
+B        172.16.101.0/29 [20/0] via 172.16.100.1, 00:03:12
+
+# Notice, 172.16.100.8/29 is backup link and 172.16.101.0/29 is Site 2
+
+# Routes on CSR-2
+
+CSR2#sh ip route | be Gateway
+Gateway of last resort is not set
+
+      172.16.0.0/16 is variably subnetted, 4 subnets, 2 masks
+B        172.16.100.0/29 [20/0] via 172.16.100.9, 00:07:31
+C        172.16.100.8/29 is directly connected, GigabitEthernet1
+L        172.16.100.10/32 is directly connected, GigabitEthernet1
+B        172.16.101.0/29 [20/0] via 172.16.100.9, 00:07:31
+
+# From Firewall CLI, check routes
+
+forti-01 # get router info bgp network 
+VRF 0 BGP table version is 1, local router ID is 172.16.101.2
+Status codes: s suppressed, d damped, h history, * valid, > best, i - internal,
+              S Stale
+Origin codes: i - IGP, e - EGP, ? - incomplete
+
+   Network          Next Hop            Metric LocPrf Weight RouteTag Path
+*> 0.0.0.0/0        172.16.101.1             0             0        0 65501 i <-/1>
+*> 172.16.100.0/29  172.16.101.1             0             0        0 65501 ? <-/1>
+*> 172.16.100.8/29  172.16.101.1             0             0        0 65501 ? <-/1>
+*> 172.16.101.0/29  172.16.101.1             0             0        0 65501 ? <-/1>
+
+Total number of prefixes 4
+
+## Check Connectivity using Ping
+
+From Fortigate to CSR-1
+
+forti-01 # execute ping 172.16.100.2
+PING 172.16.100.2 (172.16.100.2): 56 data bytes
+64 bytes from 172.16.100.2: icmp_seq=0 ttl=252 time=34.2 ms
+64 bytes from 172.16.100.2: icmp_seq=1 ttl=252 time=40.2 ms
+64 bytes from 172.16.100.2: icmp_seq=2 ttl=252 time=37.2 ms
+64 bytes from 172.16.100.2: icmp_seq=3 ttl=252 time=33.9 ms
+
+From Fortigate to CSR-2
+
+forti-01 # execute ping 172.16.100.10
+PING 172.16.100.10 (172.16.100.10): 56 data bytes
+64 bytes from 172.16.100.10: icmp_seq=0 ttl=252 time=31.5 ms
+64 bytes from 172.16.100.10: icmp_seq=1 ttl=252 time=37.7 ms
+64 bytes from 172.16.100.10: icmp_seq=2 ttl=252 time=33.8 ms
+
+From CSR-1 to Fortigate
+
+CSR1#ping 172.16.101.2
+Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 172.16.101.2, timeout is 2 seconds:
+!!!!!
+Success rate is 100 percent (5/5), round-trip min/avg/max = 37/39/41 ms
+
+From CSR-2 to Fortigate
+
+CSR2#ping 172.16.101.2 
+Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 172.16.101.2, timeout is 2 seconds:
+!!!!!
+Success rate is 100 percent (5/5), round-trip min/avg/max = 34/38/41 ms

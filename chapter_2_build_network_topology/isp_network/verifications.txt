@@ -1,0 +1,46 @@
+## Check routing
+
+P#show ip route | be Gateway
+Gateway of last resort is not set
+
+      1.0.0.0/32 is subnetted, 1 subnets
+O        1.1.1.1 [110/2] via 172.16.15.1, 01:36:10, FastEthernet0/0
+      2.0.0.0/32 is subnetted, 1 subnets
+O        2.2.2.2 [110/2] via 172.16.25.2, 01:36:10, FastEthernet1/0
+      3.0.0.0/32 is subnetted, 1 subnets
+O        3.3.3.3 [110/2] via 172.16.35.3, 01:36:10, FastEthernet1/1
+      4.0.0.0/32 is subnetted, 1 subnets
+O        4.4.4.4 [110/2] via 172.16.45.4, 01:34:56, FastEthernet2/0
+      5.0.0.0/32 is subnetted, 1 subnets
+C        5.5.5.5 is directly connected, Loopback0
+      172.16.0.0/16 is variably subnetted, 8 subnets, 2 masks
+C        172.16.15.0/24 is directly connected, FastEthernet0/0
+L        172.16.15.5/32 is directly connected, FastEthernet0/0
+C        172.16.25.0/24 is directly connected, FastEthernet1/0
+L        172.16.25.5/32 is directly connected, FastEthernet1/0
+C        172.16.35.0/24 is directly connected, FastEthernet1/1
+L        172.16.35.5/32 is directly connected, FastEthernet1/1
+C        172.16.45.0/24 is directly connected, FastEthernet2/0
+L        172.16.45.5/32 is directly connected, FastEthernet2/0
+
+## Check MPLS Forwarding
+
+P#sh mpls forwarding
+Local      Outgoing   Prefix           Bytes Label   Outgoing   Next Hop    
+Label      Label      or Tunnel Id     Switched      interface              
+16         Pop Label  1.1.1.1/32       0             Fa0/0      172.16.15.1 
+17         Pop Label  2.2.2.2/32       0             Fa1/0      172.16.25.2 
+18         Pop Label  4.4.4.4/32       0             Fa2/0      172.16.45.4 
+19         Pop Label  3.3.3.3/32       0             Fa1/1      172.16.35.3 
+
+## Check MP BGP
+
+P#sh bgp vpnv4 uni all summary
+BGP router identifier 5.5.5.5, local AS number 65501
+BGP table version is 1, main routing table version 1
+
+Neighbor        V           AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
+1.1.1.1         4        65501     112     111        1    0    0 01:39:20        0
+2.2.2.2         4        65501     111     108        1    0    0 01:37:29        0
+3.3.3.3         4        65501     110     108        1    0    0 01:37:21        0
+4.4.4.4         4        65501     109     108        1    0    0 01:37:18        0

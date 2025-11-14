@@ -14,8 +14,8 @@ vrf definition ABC_LTD
 interface FastEthernet0/0
  vrf forwarding ABC_LTD
  ip address 172.16.101.1 255.255.255.248
- duplex half
- mpls ip
+ duplex full
+ no shut
 !
 router bgp 65501
  !
